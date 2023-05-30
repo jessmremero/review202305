@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>webpackDemo</title>
+  </head>
+  <body>
+    <button id="add">节流</button>
+    <div style="width: 500px; height: 300px">
+      <img
+        style="
+          object-fit: none;
+        "
+        src="https://t7.baidu.com/it/u=1595072465,3644073269&fm=193&f=GIF"
+      />
+    </div>
+  </body>
+  <script>
+    let addBtn = document.getElementById("add");
+    // addBtn.addEventListener("click", delayFlow(clickFun, 5000));
+    addBtn.addEventListener("click", delayFlow(clickFun.bind(this), 5000));
+    function clickFun(x, y) {
+      console.log("我点击了呀" + x + y);
+    }
+    //节流
+    function delayFlow(fn, delay) {
+      let timer;
+      //通过测试发现，第二次点击不会走这里，直接进入return这里，这是为什么？
+      console.log(timer);
+      return function (x, y) {
+        console.log(arguments, x, y);
+        let argus = arguments;
+        if (!timer) {
+          timer = setTimeout(() => {
+            fn.apply(this, argus);
+            timer = null;
+          }, delay);
+        }
+      };
+    }
+    //防抖1
+    function delayFloat(fn, delay) {
+      let timer;
+      return function () {
+        let argus = arguments;
+        clearTimeout(timer);
+        timer = setTimeout(() => {
+          fn.apply(this, argus);
+        }, delay);
+      };
+    }
+
+    //防抖2
+    function Throttling(fn, delay) {
+      let start = Date.now();
+      return function () {
+        let argus = arguments;
+        let current = Date.now();
+        if (current - start >= delay) {
+          fn.apply(this, argus);
+          start = Data.now();
+        }
+      };
+    }
+  </script>
+</html>
